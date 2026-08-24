@@ -1,4 +1,4 @@
-"""Entry point for the HTTP infrastructure adaptor."""
+"""HTTP infrastructure adapters."""
 
 from proyecto_final.infrastructure.http.app_factory import app, create_app
 
