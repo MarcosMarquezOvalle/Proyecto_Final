@@ -1,0 +1,44 @@
+[project]
+name = "proyecto-final"
+version = "0.1.0"
+description = "Servicio de Orders con arquitectura hexagonal y API FastAPI"
+authors = [
+    {name = "MarcosMarquezOvalle",email = "mmarquez17@gmail.com"}
+]
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "fastapi>=0.116.1,<0.117.0",
+    "uvicorn[standard]>=0.35.0,<0.36.0",
+    "pydantic>=2.11.7,<3.0.0",
+    "PyJWT>=2.10.0,<3.0.0",
+]
+
+[tool.poetry]
+packages = [{include = "proyecto_final", from = "src"}]
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.4.1"
+httpx = "^0.28.1"
+ruff = "^0.12.10"
+mypy = "^1.17.1"
+
+[tool.pytest.ini_options]
+addopts = "-q"
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]
+
+[tool.mypy]
+python_version = "3.12"
+strict = true
+packages = ["proyecto_final"]
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
