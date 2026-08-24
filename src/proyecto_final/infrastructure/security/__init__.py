@@ -1,4 +1,4 @@
-"""Compatibility wrapper for the infrastructure auth module."""
+"""Security infrastructure components."""
 
 from proyecto_final.infrastructure.security.jwt_auth import (
     JWT_ALGORITHM,

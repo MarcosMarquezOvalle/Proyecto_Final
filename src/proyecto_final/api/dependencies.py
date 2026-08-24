@@ -6,9 +6,9 @@ from collections.abc import Callable
 from fastapi import Depends, HTTPException, Request, status
 from fastapi.security import APIKeyHeader
 
-from proyecto_final.adapters.sqlite_order_repository import SqliteOrderRepository
 from proyecto_final.application.ports import OrderRepository
 from proyecto_final.application.use_cases import OrderService
+from proyecto_final.infrastructure.persistence.sqlite_order_repository import SqliteOrderRepository
 
 api_key_scheme = APIKeyHeader(name="X-API-Key", auto_error=False)
 

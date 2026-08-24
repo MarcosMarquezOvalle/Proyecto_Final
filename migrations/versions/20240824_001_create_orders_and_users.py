@@ -1,10 +1,11 @@
 """create orders and users tables
 
 Revision ID: 20240824_001
-Revises: 
+Revises:
 Create Date: 2024-08-24 16:00:00.000000
 
 """
+
 from __future__ import annotations
 
 import sqlalchemy as sa
@@ -32,9 +33,7 @@ def upgrade() -> None:
         sa.Column("status", sa.String(), nullable=False),
         sa.PrimaryKeyConstraint("id"),
     )
-    op.execute(
-        "INSERT OR IGNORE INTO users (username, password) VALUES ('admin', 'admin123')"
-    )
+    op.execute("INSERT OR IGNORE INTO users (username, password) VALUES ('admin', 'admin123')")
 
 
 def downgrade() -> None:

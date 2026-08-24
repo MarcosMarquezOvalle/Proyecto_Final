@@ -1,4 +1,4 @@
-"""Compatibility wrapper for the SQLite persistence adapter."""
+"""Persistence infrastructure components."""
 
 from proyecto_final.infrastructure.persistence.sqlite_order_repository import SqliteOrderRepository
 

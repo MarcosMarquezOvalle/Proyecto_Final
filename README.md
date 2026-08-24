@@ -12,15 +12,49 @@ Servicio de Orders implementado con arquitectura hexagonal:
 
 ```mermaid
 flowchart LR
-    Client[Cliente / REST API] -->|HTTP + JWT| API[FastAPI\napi/routes.py\napi/auth_routes.py]
-    API --> Auth[Auth Service\nJWT validation\nlogin]
-    API --> UseCase[Application Layer\nOrderService\nUse Cases]
-    UseCase --> Domain[Domain\nOrder, OrderItem, OrderStatus]
-    UseCase --> Port[Port\nOrderRepository]
-    Port --> Repo[Adapter\nSqliteOrderRepository]
+    Client[Cliente / REST API] -->|HTTP + JWT| API[Infraestructura\nFastAPI\nOpenAPI / Docs]
+
+    API --> Auth[Infraestructura\nJWT Auth\nBearer validation]
+    API --> UseCase[Aplicación\nOrderService\nCasos de uso]
+
+    UseCase --> Domain[Dominio\nOrder\nOrderItem\nOrderStatus]
+    UseCase --> Port[Puerto\nOrderRepository]
+
+    Port --> Repo[Adaptador\nSqliteOrderRepository]
     Repo --> DB[(SQLite\norders.db)]
     Auth --> Users[(SQLite\nusers table)]
+
+    subgraph InfraestructuraLayer[Infraestructura]
+        API
+        Auth
+        Repo
+        DB
+        Users
+    end
+
+    subgraph AppCore[Core de negocio]
+        UseCase
+        Domain
+        Port
+    end
 ```
+
+### Capas de la arquitectura
+
+- Capa de infraestructura:
+  - FastAPI para HTTP y OpenAPI
+  - JWT para autenticación
+  - SQLite y Alembic para persistencia y migraciones
+  - Docker y CI/CD para delivery
+- Capa de aplicación:
+  - `OrderService`
+  - validación de reglas de negocio y transiciones de estado
+- Capa de dominio:
+  - `Order`, `OrderItem`, `OrderStatus`
+  - invariantes del negocio
+- Capa de adaptadores/puertos:
+  - `OrderRepository`
+  - implementación concreta `SqliteOrderRepository`
 
 ## Seguridad y documentación
 

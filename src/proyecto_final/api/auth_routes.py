@@ -3,7 +3,10 @@ from __future__ import annotations
 from fastapi import APIRouter, HTTPException, status
 
 from proyecto_final.api.schemas import ErrorResponse, LoginRequest, TokenResponse
-from proyecto_final.auth import authenticate_user, create_access_token
+from proyecto_final.infrastructure.security.jwt_auth import (
+    authenticate_user,
+    create_access_token,
+)
 
 router = APIRouter(tags=["auth"])
 

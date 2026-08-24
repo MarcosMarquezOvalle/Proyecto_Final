@@ -19,14 +19,14 @@ def test_openapi_contract_exposes_expected_order_endpoints(tmp_path) -> None:
     assert "/orders/{order_id}" in paths
     assert "/orders/{order_id}/status" in paths
 
-    login_schema = (
-        paths["/auth/login"]["post"]["requestBody"]["content"]["application/json"]["schema"]
-    )
+    login_schema = paths["/auth/login"]["post"]["requestBody"]["content"]["application/json"][
+        "schema"
+    ]
     assert login_schema == {"$ref": "#/components/schemas/LoginRequest"}
 
-    create_order_schema = (
-        paths["/orders"]["post"]["requestBody"]["content"]["application/json"]["schema"]
-    )
+    create_order_schema = paths["/orders"]["post"]["requestBody"]["content"]["application/json"][
+        "schema"
+    ]
     assert create_order_schema == {"$ref": "#/components/schemas/CreateOrderRequest"}
 
     create_request = schema["components"]["schemas"]["CreateOrderRequest"]
