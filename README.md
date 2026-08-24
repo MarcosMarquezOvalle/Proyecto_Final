@@ -1,4 +1,4 @@
-# Orders Service
+﻿# Orders Service
 
 Servicio de Orders implementado con arquitectura hexagonal:
 
@@ -7,6 +7,20 @@ Servicio de Orders implementado con arquitectura hexagonal:
 - **Puertos**: contrato `OrderRepository`.
 - **Adaptadores**: SQLite para persistencia y API FastAPI.
 - **Autenticación**: login con JWT para proteger endpoints.
+
+## Arquitectura
+
+```mermaid
+flowchart LR
+    Client[Cliente / REST API] -->|HTTP + JWT| API[FastAPI\napi/routes.py\napi/auth_routes.py]
+    API --> Auth[Auth Service\nJWT validation\nlogin]
+    API --> UseCase[Application Layer\nOrderService\nUse Cases]
+    UseCase --> Domain[Domain\nOrder, OrderItem, OrderStatus]
+    UseCase --> Port[Port\nOrderRepository]
+    Port --> Repo[Adapter\nSqliteOrderRepository]
+    Repo --> DB[(SQLite\norders.db)]
+    Auth --> Users[(SQLite\nusers table)]
+```
 
 ## Seguridad y documentación
 
@@ -23,6 +37,7 @@ Servicio de Orders implementado con arquitectura hexagonal:
 poetry install
 set JWT_SECRET=orders-service-jwt-secret-key-32chars
 set ORDER_DB_PATH=C:\proyectos\Python\Poryecto_Final2\Proyecto_Final\orders.db
+poetry run alembic upgrade head
 poetry run uvicorn proyecto_final.main:app --reload
 ```
 
@@ -48,6 +63,13 @@ curl -H "Authorization: Bearer <token>" http://localhost:8000/orders
 ```
 
 La base de datos SQLite se guarda en `orders.db` por defecto, o en la ruta indicada por `ORDER_DB_PATH`.
+
+## Migraciones Alembic
+
+```bash
+poetry run alembic upgrade head
+poetry run alembic revision --autogenerate -m "descripcion"
+```
 
 ## Calidad
 

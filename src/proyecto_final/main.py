@@ -27,8 +27,6 @@ def create_app(
     )
 
     resolved_database_path = database_path or os.getenv("ORDER_DB_PATH")
-    if resolved_database_path is not None:
-        os.environ["ORDER_DB_PATH"] = str(resolved_database_path)
 
     app.state.order_repository = (
         repository or build_default_repository(database_path=resolved_database_path)
