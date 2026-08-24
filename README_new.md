@@ -1,13 +1,13 @@
 # Orders Service
 
-Servicio de orders con arquitectura hexagonal, API FastAPI y autenticaci?n JWT.
+Servicio de orders con arquitectura hexagonal, API FastAPI y autenticación JWT.
 
-## Visi?n general
+## Visión general
 
-Este proyecto implementa un servicio de pedidos con separaci?n clara de responsabilidades:
+Este proyecto implementa un servicio de pedidos con separación clara de responsabilidades:
 
 - Dominio: entidades, reglas del negocio y validaciones.
-- Aplicaci?n: casos de uso y orquestaci?n de la l?gica.
+- Aplicación: casos de uso y orquestación de la lógica.
 - Puertos: contrato del repositorio.
 - Infraestructura: FastAPI, JWT, SQLite y migraciones.
 
@@ -20,7 +20,7 @@ FastAPI app factory
 OpenAPI]
     HTTP --> Auth[Infraestructura/security
 JWT + Bearer auth]
-    HTTP --> UseCase[Aplicaci?n
+    HTTP --> UseCase[Aplicacián
 OrderService
 Casos de uso]
 
@@ -58,27 +58,27 @@ users table)]
 - Capa de dominio
   - `src/proyecto_final/domain/order.py`
   - `Order`, `OrderItem`, `OrderStatus`
-  - reglas de negocio como validaci?n de items, total y transiciones de estado
+  - reglas de negocio como validación de items, total y transiciones de estado
 
-- Capa de aplicaci?n
+- Capa de aplicación
   - `src/proyecto_final/application/use_cases.py`
   - `OrderService`
-  - creaci?n, listado, detalle y actualizaci?n de estado
+  - creación, listado, detalle y actualización de estado
 
 - Capa de infraestructura
   - `src/proyecto_final/infrastructure/http`: app factory, rutas y schemas
-  - `src/proyecto_final/infrastructure/security`: JWT y autenticaci?n
+  - `src/proyecto_final/infrastructure/security`: JWT y autenticación
   - `src/proyecto_final/infrastructure/persistence`: repositorio SQLite
   - `migrations/`: Alembic para migraciones
 
 ## Funcionalidades
 
-- Crear ?rdenes con uno o varios items.
+- Crear Órdenes con uno o varios items.
 - Validar totales y transiciones de estado.
-- Consultar orden por id y listar todas las ?rdenes.
+- Consultar orden por id y listar todas las órdenes.
 - Actualizar estado de la orden dentro de reglas permitidas.
-- Autenticaci?n con JWT en endpoints protegidos.
-- Documentaci?n autom?tica con OpenAPI/Swagger.
+- Autenticación con JWT en endpoints protegidos.
+- Documentación automática con OpenAPI/Swagger.
 - Persistencia con SQLite.
 - Pruebas de caso de uso, API, contrato y E2E.
 
@@ -94,7 +94,7 @@ users table)]
 poetry install
 ```
 
-Configuraci?n recomendada de entorno:
+Configuración recomendada de entorno:
 
 ```bash
 set JWT_SECRET=orders-service-jwt-secret-key-32chars
@@ -107,7 +107,7 @@ Aplicar migraciones:
 poetry run alembic upgrade head
 ```
 
-Levantar la aplicaci?n:
+Levantar la aplicación:
 
 ```bash
 poetry run uvicorn proyecto_final.main:app --reload
@@ -118,7 +118,7 @@ La API queda disponible en:
 - http://localhost:8000/docs
 - http://localhost:8000/redoc
 
-## Autenticaci?n
+## Autenticación
 
 Credenciales demo:
 
@@ -160,7 +160,7 @@ curl -H "Authorization: Bearer <jwt>" http://localhost:8000/orders
 
 ## Migraciones Alembic
 
-Generar una nueva migraci?n:
+Generar una nueva migración:
 
 ```bash
 poetry run alembic revision --autogenerate -m "descripcion"
@@ -182,10 +182,10 @@ poetry run pytest
 
 Pruebas disponibles:
 
-- `tests/test_use_cases.py`: casos de uso y validaci?n de dominio.
+- `tests/test_use_cases.py`: casos de uso y validación de dominio.
 - `tests/test_api.py`: flujo HTTP autenticado.
-- `tests/test_contract.py`: verificaci?n del contrato OpenAPI.
-- `tests/test_e2e.py`: integraci?n con migraciones y flujo completo.
+- `tests/test_contract.py`: verificación del contrato OpenAPI.
+- `tests/test_e2e.py`: integración con migraciones y flujo completo.
 
 ## Calidad
 
