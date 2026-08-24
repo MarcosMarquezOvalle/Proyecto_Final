@@ -1,4 +1,4 @@
-# Orders Service
+﻿# Orders Service
 
 Servicio de orders con arquitectura hexagonal, API FastAPI y autenticación JWT.
 
@@ -15,28 +15,16 @@ Este proyecto implementa un servicio de pedidos con separación clara de respons
 
 ```mermaid
 flowchart LR
-    Client[Cliente / REST API] -->|HTTP + JWT| HTTP[Infraestructura/http
-FastAPI app factory
-OpenAPI]
-    HTTP --> Auth[Infraestructura/security
-JWT + Bearer auth]
-    HTTP --> UseCase[Aplicacián
-OrderService
-Casos de uso]
+    Client[Cliente / REST API] -->|HTTP + JWT| HTTP[Infraestructura/http\nFastAPI app factory\nOpenAPI]
+    HTTP --> Auth[Infraestructura/security\nJWT + Bearer auth]
+    HTTP --> UseCase[Aplicación\nOrderService\nCasos de uso]
 
-    UseCase --> Domain[Dominio
-Order
-OrderItem
-OrderStatus]
-    UseCase --> Port[Puerto
-OrderRepository]
+    UseCase --> Domain[Dominio\nOrder\nOrderItem\nOrderStatus]
+    UseCase --> Port[Puerto\nOrderRepository]
 
-    Port --> Repo[Infraestructura/persistence
-SqliteOrderRepository]
-    Repo --> DB[(SQLite
-orders.db)]
-    Auth --> Users[(SQLite
-users table)]
+    Port --> Repo[Infraestructura/persistence\nSqliteOrderRepository]
+    Repo --> DB[(SQLite\norders.db)]
+    Auth --> Users[(SQLite\nusers table)]
 
     subgraph InfrastructureLayer[Infraestructura]
         HTTP
@@ -51,6 +39,125 @@ users table)]
         Domain
         Port
     end
+```
+
+## Diagrama de clases
+
+```mermaid
+classDiagram
+    class OrderStatus {
+        <<enum>>
+        PENDING
+        CONFIRMED
+        SHIPPED
+        CANCELLED
+    }
+
+    class OrderItem {
+        +sku: str
+        +quantity: int
+        +unit_price: Decimal
+        +line_total: Decimal
+        +__post_init__()
+    }
+
+    class Order {
+        +id: UUID
+        +customer_id: str
+        +items: tuple[OrderItem, ...]
+        +created_at: datetime
+        +status: OrderStatus
+        +total_amount: Decimal
+        +__post_init__()
+        +create(customer_id: str, items: tuple[OrderItem, ...]) Order
+    }
+
+    class OrderRepository {
+        <<interface>>
+        +add(order: Order) None
+        +get(order_id: UUID) Order | None
+        +list() list[Order]
+        +update(order: Order) None
+    }
+
+    class SqliteOrderRepository {
+        +database_path: Path
+        +__init__(database_path: str | Path | None)
+        +add(order: Order) None
+        +get(order_id: UUID) Order | None
+        +list() list[Order]
+        +update(order: Order) None
+    }
+
+    class CreateOrderItemInput {
+        +sku: str
+        +quantity: int
+        +unit_price: Decimal
+    }
+
+    class CreateOrderCommand {
+        +customer_id: str
+        +items: tuple[CreateOrderItemInput, ...]
+    }
+
+    class OrderService {
+        +create_order(command: CreateOrderCommand) Order
+        +get_order(order_id: UUID) Order
+        +list_orders() list[Order]
+        +update_status(order_id: UUID, new_status: OrderStatus) Order
+    }
+
+    class InvalidOrderTransitionError {
+        +current_status: OrderStatus
+        +requested_status: OrderStatus
+    }
+
+    class OrderNotFoundError {
+        +order_id: UUID
+    }
+
+    class LoginRequest {
+        +username: str
+        +password: str
+    }
+
+    class TokenResponse {
+        +access_token: str
+        +token_type: str
+    }
+
+    class CreateOrderRequest {
+        +customer_id: str
+        +items: list[OrderItemCreateRequest]
+    }
+
+    class OrderResponse {
+        +id: UUID
+        +customer_id: str
+        +items: list[OrderItemResponse]
+        +created_at: datetime
+        +status: OrderStatus
+        +total_amount: Decimal
+        +from_domain(order: Order) OrderResponse
+    }
+
+    class OrderItemResponse {
+        +sku: str
+        +quantity: int
+        +unit_price: Decimal
+        +line_total: Decimal
+        +from_domain(item: OrderItem) OrderItemResponse
+    }
+
+    Order --> OrderItem
+    Order --> OrderStatus
+    OrderRepository <|.. SqliteOrderRepository
+    OrderService --> OrderRepository
+    OrderService --> Order
+    OrderService ..> InvalidOrderTransitionError
+    OrderService ..> OrderNotFoundError
+    OrderResponse --> OrderItemResponse
+    CreateOrderRequest --> OrderItemResponse
 ```
 
 ### Capas del proyecto
@@ -73,7 +180,7 @@ users table)]
 
 ## Funcionalidades
 
-- Crear Órdenes con uno o varios items.
+- Crear órdenes con uno o varios items.
 - Validar totales y transiciones de estado.
 - Consultar orden por id y listar todas las órdenes.
 - Actualizar estado de la orden dentro de reglas permitidas.
@@ -132,7 +239,9 @@ Credenciales demo:
 Login:
 
 ```bash
-curl -X POST http://localhost:8000/auth/login   -H "Content-Type: application/json"   -d '{"username":"admin","password":"admin123"}'
+curl -X POST http://localhost:8000/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{"username":"admin","password":"admin123"}'
 ```
 
 Respuesta ejemplo:
